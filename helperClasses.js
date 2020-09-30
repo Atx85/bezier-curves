@@ -1,3 +1,16 @@
+function factorialize(num) {
+    if (num === 0 || num === 1)
+      return 1;
+    for (var i = num - 1; i >= 1; i--) {
+      num *= i;
+    }
+    return num;
+  }
+
+function nCi(n, i) {
+    return factorialize(n) / (factorialize(i) * factorialize(n-i))
+}
+
 class Drawable {
     constructor (ctx, vertices) {
        this.ctx = ctx
@@ -20,6 +33,10 @@ class Point extends Drawable {
 
     fill () {
         this.isFill = true
+    }
+
+    dragable () {
+        
     }
 
     draw () {
