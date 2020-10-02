@@ -19,11 +19,20 @@ let C = []
 let down = false
 let selected = false
 
+function getPc(p,t) {
+    // console.log('x1:',Math.pow((1-t),3) )
+    let x = Math.pow((1-t),3)* p[0].vertices[0].x + 3*t*Math.pow((1-t),2)* p[1].vertices[0].x + 3*Math.pow(t,2)*(1-t)*p[2].vertices[0].x + Math.pow(t,3)*p[3].vertices[0].x
+    let y = Math.pow((1-t),3)* p[0].vertices[0].y + 3*t*Math.pow((1-t),2)* p[1].vertices[0].y + 3*Math.pow(t,2)*(1-t)*p[2].vertices[0].y + Math.pow(t,3)*p[3].vertices[0].y
+    return new Point(ctx,[[x,y]])
+}
+
 function init () {
-    P.push(new Point(ctx, [[10,10]]))
-    P.push(new Point(ctx, [[10,300]]))
-    P.push(new Point(ctx, [[300,300]]))
-    P.push(new Point(ctx, [[300,10]]))
+    ctx.font = "30px Arial";
+    P.push(new Point(ctx, [[10,10]]))       
+    P.push(new Point(ctx, [[10,100]]))
+    P.push(new Point(ctx, [[100,100]]))
+    P.push(new Point(ctx, [[100,10]]))
+    P.push(new Point(ctx, [[150,10]]))
 
     canvas.addEventListener('mousedown', function (e) {
          down = true
@@ -61,28 +70,30 @@ function update() {
         p.fill() 
         p.draw()
     })
-    for(let T = 0; T < 10; T=T+0.002) {
+    for(let T = 0; T < 1; T=T+0.0025) {
         let x = 0
         let y = 0
 
         let n = P.length 
         b=[]
         for(let i = 0; i < n; i++) {
-            b[i] = nCi(n, i) * (Math.pow(T,i)) * (Math.pow((1-T), (n-i)) )
+            b[i] = nCi(n - 1, i) * (Math.pow(T,i)) * (Math.pow((1-T), (n - 1 - i)) )
+            x += P[i].vertices[0].x * b[i]
+            // if(i === 0) console.log('xx1',b[i], n-i)
+            y += P[i].vertices[0].y * b[i]
         }
 
-        for(let j = 0; j < P.length; j++) {
-            x += P[j].vertices[0].x * b[j]
-            y += P[j].vertices[0].y * b[j]
-        }
-
-        C[t] = new Point(ctx, [[x, y]])
-        C[t].draw()
+        let c = new Point(ctx, [[x, y]])
+        // c = getPc(P,T)
+        // console.log(c.vertices[0].x,c.vertices[0].y, x,y )
+        c.draw()
     }
+    // console.log(C)
 }
 
 
 
 init()
-window.requestAnimationFrame(update)
+update()
+// window.requestAnimationFrame(update)
 
